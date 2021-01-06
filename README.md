@@ -80,4 +80,4 @@ Run `./download.sh` and `python prepare_training_data.py`, then `train-large-mod
 
 <img src="https://raw.githubusercontent.com/orzhan/rugpt3-question-generation/main/true_false_example.png" alt="True/false question example" width="400" />
 
-<img src="https://raw.githubusercontent.com/orzhan/rugpt3-question-generation/main/mcq_example.png" alt="Multiple choice question example" width="400" />
+<img src="https://raw.githubusercontent.com/orzhan/rugpt3-question-generation/main/mcq_example.png" alt="Multiple choice question example" width="600" />
