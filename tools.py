@@ -35,13 +35,13 @@ class TrueFalseArgs():
     
     def __init__(self):
       self.parser = argparse.ArgumentParser()
-      self.parser.add_argument('-t', '--temperature', default=0.9, action='store', help='Temperature setting for model')
-      self.parser.add_argument('-c', '--context_size', default=5, action='store', help='Number of sentences used for the context')  
-      self.parser.add_argument('-q', '--max_questions', default=10, action='store', help='Number of questions to generate')  
+      self.parser.add_argument('-t', '--temperature', default=0.9, type=float, action='store', help='Temperature setting for model')
+      self.parser.add_argument('-c', '--context_size', default=5, type=int, action='store', help='Number of sentences used for the context')  
+      self.parser.add_argument('-q', '--max_questions', default=10, type=int,action='store', help='Number of questions to generate')  
       self.parser.add_argument('-f', '--filename', default=None, action='store', help='File name of context')  
       self.parser.add_argument('-w', '--topic', default=None, action='store', help='Topic from wikipedia')  
-      self.parser.add_argument('-sr', '--summarize_ratio', default=None, action='store', help='Summarization ratio (for example 0.2). Alternative to --summarize_word_count. Use 1.0 to disable summarization')  
-      self.parser.add_argument('-sw', '--summarize_word_count', default=3000, action='store', help='Summarization word count (for example 3000). Alternative to --summarize_ratio')  
+      self.parser.add_argument('-sr', '--summarize_ratio', default=None, type=float, action='store', help='Summarization ratio (for example 0.2). Alternative to --summarize_word_count. Use 1.0 to disable summarization')  
+      self.parser.add_argument('-sw', '--summarize_word_count', default=3000,  type=int, action='store', help='Summarization word count (for example 3000). Alternative to --summarize_ratio')  
       self.parser.parse_args(namespace=self)
       
     
@@ -61,15 +61,15 @@ class MultipleChoiceArgs():
       self.parser = argparse.ArgumentParser()
       self.parser.add_argument('-f', '--filename', default=None, action='store', help='File name of context')  
       self.parser.add_argument('-w', '--topic', default=None, action='store', help='Topic from wikipedia')  
-      self.parser.add_argument('-ta', '--temperature_answer', default=0.5, action='store', help='Temperature setting for answer generation')
-      self.parser.add_argument('-tq', '--temperature_question', default=0.5, action='store', help='Temperature setting for question generation')
-      self.parser.add_argument('-tw', '--temperature_wrong_answer', default=2.0, action='store', help='Temperature setting for wrong answers')
-      self.parser.add_argument('-c', '--context_size', default=8, action='store', help='Number of sentences used for the context')  
-      self.parser.add_argument('-q', '--max_questions', default=10, action='store', help='Number of questions to generate')  
-      self.parser.add_argument('-a', '--answers', default=4, action='store', help='Number of answers including correct. Set to 0 to output only questions')  
-      self.parser.add_argument('-sr', '--summarize_ratio', default=None, action='store', help='Summarization ratio (for example 0.2). Alternative to --summarize_word_count. Use 1.0 to disable summarization')  
-      self.parser.add_argument('-sw', '--summarize_word_count', default=3000, action='store', help='Summarization word count (for example 3000). Alternative to --summarize_ratio')  
-      self.parser.add_argument('-g', '--generate_count', default=20, action='store', help='Number of sequences generated each time. Higher values can produce better results but are slower and require more RAM')  
+      self.parser.add_argument('-ta', '--temperature_answer', default=0.5, type=float, action='store', help='Temperature setting for answer generation')
+      self.parser.add_argument('-tq', '--temperature_question', default=0.5, type=float,action='store', help='Temperature setting for question generation')
+      self.parser.add_argument('-tw', '--temperature_wrong_answer', default=2.0, type=float,action='store', help='Temperature setting for wrong answers')
+      self.parser.add_argument('-c', '--context_size', default=8, type=int, action='store', help='Number of sentences used for the context')  
+      self.parser.add_argument('-q', '--max_questions', default=10, type=int,action='store', help='Number of questions to generate')  
+      self.parser.add_argument('-a', '--answers', default=4, type=int,action='store', help='Number of answers including correct. Set to 0 to output only questions')  
+      self.parser.add_argument('-sr', '--summarize_ratio', default=None, type=float, action='store', help='Summarization ratio (for example 0.2). Alternative to --summarize_word_count. Use 1.0 to disable summarization')  
+      self.parser.add_argument('-sw', '--summarize_word_count', default=3000, type=int,action='store', help='Summarization word count (for example 3000). Alternative to --summarize_ratio')  
+      self.parser.add_argument('-g', '--generate_count', default=20, type=int, action='store', help='Number of sequences generated each time. Higher values can produce better results but are slower and require more RAM')  
       self.parser.parse_args(namespace=self)
 
 
