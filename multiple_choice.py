@@ -46,46 +46,48 @@ def init_model(model_name_or_path):
     model.to(device)
     return (tokenizer, model)
 
-def generate(prompt, temperature, length, num_return_sequences, p, tokenizer, model):
+def generate(prompt, temperature, length, num_return_sequences, num_calls, p, tokenizer, model):
     length = adjust_length_to_model(length, max_sequence_length=model.config.max_position_embeddings)
     #logger.info(args)
     generated_sequences = []
-    prompt_text = ""
-    prompt_text = prompt 
+    
+    for n_call in range(num_calls):
+        prompt_text = ""
+        prompt_text = prompt 
 
-    encoded_prompt = tokenizer.encode(prompt_text, add_special_tokens=False, return_tensors="pt")
-    encoded_prompt = encoded_prompt.to(model.device)
+        encoded_prompt = tokenizer.encode(prompt_text, add_special_tokens=False, return_tensors="pt")
+        encoded_prompt = encoded_prompt.to(model.device)
 
-    output_sequences = model.generate(
-        input_ids=encoded_prompt,
-        max_length=length + len(encoded_prompt[0]),
-        temperature=temperature,
-        top_k=0,
-        top_p=p,
-        #repetition_penalty=args.repetition_penalty,
-        do_sample=True,
-        num_return_sequences=num_return_sequences,
-    )
-
-    if len(output_sequences.shape) > 2:
-        output_sequences.squeeze_()
-
-    for generated_sequence_idx, generated_sequence in enumerate(output_sequences):
-        #print("ruGPT:".format(generated_sequence_idx + 1))
-        generated_sequence = generated_sequence.tolist()
-
-        # Decode text
-        text = tokenizer.decode(generated_sequence, clean_up_tokenization_spaces=True)
-
-        # Remove all text after the stop token
-        #text = text[: text.find(args.stop_token) if args.stop_token else None]
-
-        # Add the prompt at the beginning of the sequence. Remove the excess text that was used for pre-processing
-        total_sequence = (
-            prompt_text + text[len(tokenizer.decode(encoded_prompt[0], clean_up_tokenization_spaces=True)) :]
+        output_sequences = model.generate(
+            input_ids=encoded_prompt,
+            max_length=length + len(encoded_prompt[0]),
+            temperature=temperature,
+            top_k=0,
+            top_p=p,
+            #repetition_penalty=args.repetition_penalty,
+            do_sample=True,
+            num_return_sequences=num_return_sequences,
         )
 
-        generated_sequences.append(total_sequence)
+        if len(output_sequences.shape) > 2:
+            output_sequences.squeeze_()
+
+        for generated_sequence_idx, generated_sequence in enumerate(output_sequences):
+            #print("ruGPT:".format(generated_sequence_idx + 1))
+            generated_sequence = generated_sequence.tolist()
+
+            # Decode text
+            text = tokenizer.decode(generated_sequence, clean_up_tokenization_spaces=True)
+
+            # Remove all text after the stop token
+            #text = text[: text.find(args.stop_token) if args.stop_token else None]
+
+            # Add the prompt at the beginning of the sequence. Remove the excess text that was used for pre-processing
+            total_sequence = (
+                prompt_text + text[len(tokenizer.decode(encoded_prompt[0], clean_up_tokenization_spaces=True)) :]
+            )
+
+            generated_sequences.append(total_sequence)
      
     return generated_sequences
 
@@ -125,7 +127,7 @@ def generate_multiple_choice(args):
         if len(context_sents) < args.context_size - 1:
           continue
         context = ' '.join([x.text for x in context_sents])
-        aqs = generate('Context: ' + context + ' Answer: ', args.temperature_answer, 50, args.generate_count, 0.95, tokenizer, model)
+        aqs = generate('Context: ' + context + ' Answer: ', args.temperature_answer, 50, args.generate_count, args.generate_size, 0.95, tokenizer, model)
         aqs_store[sent_index] = aqs
 
     lib_logger.info('Generated questions')
@@ -156,6 +158,9 @@ def generate_multiple_choice(args):
         found = False
         for aq in aqs:
           try:
+            a_orig = aq[aq.index('Answer: ')+len('Answer: '):].strip()
+            if a_orig.find('Question:') != -1:
+              a_orig = a_orig[:a_orig.find('Question:')].strip()
             #a = aq[aq.index('Answer: ')+len('Answer: '):].strip()
             q = aq[aq.index('Question: ')+len('Question: '):].strip()
             #a = a[:a.index('Question: ')].strip()
@@ -167,9 +172,14 @@ def generate_multiple_choice(args):
                 break
             if len(q) > 25 and q.index('?') != -1:
               # test if model can answer the question itself
-              qqa = generate('Context: ' + context + ' Question: ' + q + ' Answer: ', args.temperature_question, 30, args.generate_count, 0.95, tokenizer, model_qa)
+              qqa = generate('Context: ' + context + ' Question: ' + q + ' Answer: ', args.temperature_question, 30, args.generate_size, args.generate_count, 0.95, tokenizer, model_qa)
               
-              qqaw = generate('Question: ' + q + ' Answer: ', args.temperature_wrong_answer, 30, args.generate_count, 0.95, tokenizer, model_qa)
+              if args.wrong_context_size > 0:
+                rc = random.randint(0, args.context_size - args.wrong_context_size)
+                context_wrong = 'Context: ' + ' '.join([x.text for x in context_sents if x.text.find(a_orig)==-1][rc:rc+args.wrong_context_size])
+              else:
+                context_wrong = ''
+              qqaw = generate(context_wrong +'Question: ' + q + ' Answer: ', args.temperature_wrong_answer, 30, args.generate_size, args.generate_count, 0.95, tokenizer, model_qa)
               
               aac = 0
 

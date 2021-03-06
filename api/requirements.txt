@@ -1,0 +1,14 @@
+-f https://download.pytorch.org/whl/torch_stable.html
+transformers==4.1.1
+summa==1.2.0
+razdel==0.5.0
+slovnet==0.5.0
+navec==0.10.0
+wikipedia==1.4.0
+onnx==1.8.1
+onnxruntime==1.5.1
+coloredlogs==15.0
+Flask==1.1.1
+Flask-Cors==3.0.8
+torch==1.6.0+cpu
+flask-swagger-ui==3.36.0

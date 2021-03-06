@@ -5,9 +5,21 @@ Created for AIJ-2020 Contest.
 
 # Demo
 
-See [colab notebook](https://colab.research.google.com/drive/1vX6OqenYBc5S4PAO0hPgR7sBbJxXjCBr?usp=sharing)
+Full models: See [colab notebook](https://colab.research.google.com/drive/1vX6OqenYBc5S4PAO0hPgR7sBbJxXjCBr?usp=sharing)
 
-# Installing
+# Running small model in Docker
+
+Run `docker run -p 5000:5000 orzhan/rugpt3-questions:latest`
+
+Open `http://localhost:5000` for Swagger UI.
+
+# Models
+
+Small model (question generation only): https://drive.google.com/file/d/1-9sX3iWezHRwnlvHbtGjvZGkwhYaflRb/view?usp=sharing
+
+Large models (question and answer generation): https://drive.google.com/uc?id=13siMs0HoU3WHkeGvNJxVFOF68BAQedmT
+
+# Installing packages and large models
 
 `git clone https://github.com/orzhan/rugpt3-question-generation.git`
 
