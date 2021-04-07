@@ -1,8 +1,9 @@
+# -*- coding: utf8 -*-
 from flask import Flask, jsonify, request, send_from_directory
 import pickle
 import os
 import numpy as np
-from questions import generate_multiple_choice
+from questions import generate_multiple_choice, generate_true_false
 from flask_swagger_ui import get_swaggerui_blueprint
 
 app = Flask(__name__)
@@ -39,10 +40,26 @@ def get():
     #output = data
 
     return jsonify(output)
+    
+    
+
+@app.route('/api-long', methods=['POST'])
+def getLong():
+    # use parser and find the user's query
+    data = request.get_json(force=True)
+    if not ('text' in data):
+        return {'error': 'text is required'}
+    if not ('count' in data):
+        return {'error': 'count is required'}
+
+    output = generate_true_false(data['text'], data['count'])
+    #output = data
+
+    return jsonify(output)
 
 app.register_blueprint(swaggerui_blueprint)
 
-app.run()
+#app.run()
 
 
 if __name__ == '__main__':

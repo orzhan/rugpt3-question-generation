@@ -1,0 +1,54 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Question generation app"
+paths:
+  /api:
+    post:
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          properties:
+            text:
+              type: string
+              example: "Ракета-носитель Atlas V с марсоходом стартовала в июле 2020 года с космодрома на мысе Канаверал (штат Флорида). 18 февраля 2021 года ровер совершил посадку на поверхность Марса. Он впервые соберёт образцы грунта, которые в 2030-х годах должны доставить на Землю."
+            count:
+              type: number
+              example: 1
+      responses:
+        "200":
+          description: "List of questions"
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                context:
+                  type: string
+                question:
+                  type: string
+  /api-long:
+    post:
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: object
+          properties:
+            text:
+              type: string
+              example: "Ракета-носитель Atlas V с марсоходом стартовала в июле 2020 года с космодрома на мысе Канаверал (штат Флорида). 18 февраля 2021 года ровер совершил посадку на поверхность Марса. Он впервые соберёт образцы грунта, которые в 2030-х годах должны доставить на Землю."
+            count:
+              type: number
+              example: 1
+      responses:
+        "200":
+          description: "List of questions"
+          schema:
+            type: array
+            items:
+              type: object
